@@ -1,7 +1,8 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
 using WebAPICoreDapper.Models;
+using System.Data;
+using System.Data.SqlClient;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,36 +24,80 @@ namespace WebAPICoreDapper.Controllers
         {
             using (var conn = new SqlConnection(_connectionString))
             {
-                if(conn.State == System.Data.ConnectionState.Closed)
+                if(conn.State == ConnectionState.Closed)
                     conn.Open();
-                var result = await conn.QueryAsync<Product>("SELECT Id, Sku, Price, DiscountPrice, ImageUrl, CreateAt, IsActive, ViewCount FROM Products\r\n", null, null, null, System.Data.CommandType.Text);
+                var result = await conn.QueryAsync<Product>("Get_Product_All", null, null, null, CommandType.StoredProcedure);
                 return result;
             }
         }
 
         // GET api/<ProductController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{id}", Name = "Get")]
+        public async Task<Product> Get(int id)
         {
-            return "value";
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                var paramaters = new DynamicParameters();
+                paramaters.Add("@id", id);
+                var result = await conn.QueryAsync<Product>("Get_Product_ById", paramaters, null, null, CommandType.StoredProcedure);
+                return result.Single();
+            }
         }
 
         // POST api/<ProductController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<int> Post([FromBody] Product product)
         {
+            int newId = 0;
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                var paramaters = new DynamicParameters();
+                paramaters.Add("@sku", product.Sku);
+                paramaters.Add("@price", product.Price);
+                paramaters.Add("@isActive", product.IsActive);
+                paramaters.Add("@imageUrl", product.ImageUrl);
+                paramaters.Add("@id", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                var result = await conn.ExecuteAsync("Create_Product", paramaters, null, null, CommandType.StoredProcedure);
+
+                newId = paramaters.Get<int>("@id");
+                return newId;
+            }
         }
 
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task Put(int id, [FromBody] Product product)
         {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                var paramaters = new DynamicParameters();
+                paramaters.Add("@id", id);
+                paramaters.Add("@sku", product.Sku);
+                paramaters.Add("@price", product.Price);
+                paramaters.Add("@isActive", product.IsActive);
+                paramaters.Add("@imageUrl", product.ImageUrl);
+                await conn.ExecuteAsync("Update_Product", paramaters, null, null, CommandType.StoredProcedure);
+            }
         }
 
         // DELETE api/<ProductController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                var paramaters = new DynamicParameters();
+                paramaters.Add("@id", id);
+                await conn.QueryAsync<Product>("Delete_Product_ById", paramaters, null, null, CommandType.StoredProcedure);
+            }
         }
     }
 }
