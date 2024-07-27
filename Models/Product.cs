@@ -1,8 +1,11 @@
-﻿namespace WebAPICoreDapper.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebAPICoreDapper.Models
 {
     public class Product
     {
         public int Id { get; set; }
+        [Required]
         public string Sku { get; set; }
         public float Price { get; set; }
         public float? DiscountPrice { get; set; }
