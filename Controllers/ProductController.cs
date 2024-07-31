@@ -8,6 +8,7 @@ using WebAPICoreDapper.Extensions;
 using System.Globalization;
 using Microsoft.Extensions.Localization;
 using WebAPICoreDapper.Resources;
+using WebAPICoreDapper.Filters;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,11 +21,13 @@ namespace WebAPICoreDapper.Controllers
     public class ProductController : ControllerBase
     {
         private readonly string _connectionString;
+        private readonly ILogger<ProductController> _logger;
         private readonly IStringLocalizer<ProductController> _localizer;
         private readonly LocService _locService;
-        public ProductController(IConfiguration configuration, IStringLocalizer<ProductController> localizer, LocService locService)
+        public ProductController(IConfiguration configuration, ILogger<ProductController> logger, IStringLocalizer<ProductController> localizer, LocService locService)
         {
             _connectionString = configuration.GetConnectionString("DbConnectionString");
+            _logger = logger;
             _localizer = localizer;
             _locService = locService;
         }
@@ -33,6 +36,7 @@ namespace WebAPICoreDapper.Controllers
         [HttpGet]
         public async Task<IEnumerable<Product>> Get()
         {
+            _logger.LogTrace("Test logging");
             var culture = CultureInfo.CurrentCulture.Name;
             string text = _localizer["Test"];
             string text1 = _locService.GetLocalizedHtmlString("ForgotPassword");
@@ -92,11 +96,9 @@ namespace WebAPICoreDapper.Controllers
 
         // POST api/<ProductController>
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Post([FromBody] Product product)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             using (var conn = new SqlConnection(_connectionString))
             {
                 if (conn.State == ConnectionState.Closed)
@@ -116,11 +118,9 @@ namespace WebAPICoreDapper.Controllers
 
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
+        [ValidateModel]
         public async Task<IActionResult> Put(int id, [FromBody] Product product)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             using (var conn = new SqlConnection(_connectionString))
             {
                 if (conn.State == ConnectionState.Closed)

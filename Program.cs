@@ -7,11 +7,12 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Reflection;
 using WebAPICoreDapper.Resources;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.AddFile(builder.Configuration.GetSection("Logging"));
 // Add services to the container.
-
 builder.Services.AddControllers()
     .AddNewtonsoftJson(opt =>
     {
