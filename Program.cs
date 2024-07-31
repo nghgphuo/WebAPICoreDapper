@@ -7,27 +7,11 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Reflection;
 using WebAPICoreDapper.Resources;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.AddFile(builder.Configuration.GetSection("Logging"));
 // Add services to the container.
-builder.Services.AddControllers()
-    .AddNewtonsoftJson(opt =>
-    {
-        opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
-    });
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c  =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Phuocnh Rest API Dapper",
-        Version = "v1"
-    });
-});
+builder.Logging.AddFile(builder.Configuration.GetSection("Logging"));
 
 var supportedCultures = new[] { 
     new CultureInfo("vi-VN"),
@@ -43,9 +27,6 @@ options.RequestCultureProviders = new[]
 {
     new RouteDataRequestCultureProvider() {Options = options }
 };
-builder.Services.AddSingleton(options);
-builder.Services.AddSingleton<LocService>();
-
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services.AddMvc()
@@ -58,6 +39,26 @@ builder.Services.AddMvc()
             return factory.Create("SharedResource", assemblyName.Name);
         };
     });
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(opt =>
+    {
+        opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
+    });
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c  =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Phuocnh Rest API Dapper",
+        Version = "v1"
+    });
+});
+
+builder.Services.AddSingleton(options);
+builder.Services.AddSingleton<LocService>();
 
 var app = builder.Build();
 
