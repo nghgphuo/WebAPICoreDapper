@@ -15,15 +15,18 @@ namespace WebAPICoreDapper.Controllers
     public class ProductController : ControllerBase
     {
         private readonly string _connectionString;
-        public ProductController(IConfiguration configuration)
+        private readonly ILogger<ProductController> _logger;
+        public ProductController(IConfiguration configuration, ILogger<ProductController> logger)
         {
             _connectionString = configuration.GetConnectionString("DbConnectionString");
+            _logger = logger;
         }
 
         // GET: api/<ProductController>
         [HttpGet]
         public async Task<IEnumerable<Product>> Get()
         {
+            _logger.LogTrace("Test product controller");
             using (var conn = new SqlConnection(_connectionString))
             {
                 if(conn.State == ConnectionState.Closed)

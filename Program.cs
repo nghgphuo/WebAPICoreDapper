@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.AddFile(builder.Configuration.GetSection("Logging"));
 // Add services to the container.
 builder.Services.AddControllers()
     .AddNewtonsoftJson(opt =>
@@ -26,7 +27,6 @@ builder.Services.AddSwaggerGen(c  =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
 app.UseExceptionHandler(options =>
 {
     options.Run(async context =>
