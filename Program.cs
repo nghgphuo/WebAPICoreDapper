@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 

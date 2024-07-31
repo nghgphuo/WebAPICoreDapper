@@ -4,6 +4,7 @@ using WebAPICoreDapper.Models;
 using System.Data;
 using System.Data.SqlClient;
 using WebAPICoreDapper.Dtos;
+using WebAPICoreDapper.Filters;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -79,11 +80,9 @@ namespace WebAPICoreDapper.Controllers
 
         // POST api/<ProductController>
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Post([FromBody] Product product)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             using (var conn = new SqlConnection(_connectionString))
             {
                 if (conn.State == ConnectionState.Closed)
@@ -103,11 +102,9 @@ namespace WebAPICoreDapper.Controllers
 
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
+        [ValidateModel]
         public async Task<IActionResult> Put(int id, [FromBody] Product product)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             using (var conn = new SqlConnection(_connectionString))
             {
                 if (conn.State == ConnectionState.Closed)
