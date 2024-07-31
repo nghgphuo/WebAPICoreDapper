@@ -1,10 +1,17 @@
+using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Reflection;
+using WebAPICoreDapper.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllers()
     .AddNewtonsoftJson(opt =>
     {
@@ -20,6 +27,36 @@ builder.Services.AddSwaggerGen(c  =>
         Version = "v1"
     });
 });
+
+var supportedCultures = new[] { 
+    new CultureInfo("vi-VN"),
+    new CultureInfo("en-US") 
+};
+var options = new RequestLocalizationOptions()
+{
+    DefaultRequestCulture = new RequestCulture(culture: "vi-VN", uiCulture: "vi-VN"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+};
+options.RequestCultureProviders = new[]
+{
+    new RouteDataRequestCultureProvider() {Options = options }
+};
+builder.Services.AddSingleton(options);
+builder.Services.AddSingleton<LocService>();
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddMvc()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization(options =>
+    {
+        options.DataAnnotationLocalizerProvider = (type, factory) =>
+        {
+            var assemblyName = new AssemblyName(typeof(SharedResource).GetTypeInfo().Assembly.FullName);
+            return factory.Create("SharedResource", assemblyName.Name);
+        };
+    });
 
 var app = builder.Build();
 

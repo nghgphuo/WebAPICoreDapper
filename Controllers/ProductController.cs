@@ -4,25 +4,38 @@ using WebAPICoreDapper.Models;
 using System.Data;
 using System.Data.SqlClient;
 using WebAPICoreDapper.Dtos;
+using WebAPICoreDapper.Extensions;
+using System.Globalization;
+using Microsoft.Extensions.Localization;
+using WebAPICoreDapper.Resources;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebAPICoreDapper.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/{culture}/[controller]")]
     [ApiController]
+    [MiddlewareFilter(typeof(LocalizationPipeline))]
+
     public class ProductController : ControllerBase
     {
         private readonly string _connectionString;
-        public ProductController(IConfiguration configuration)
+        private readonly IStringLocalizer<ProductController> _localizer;
+        private readonly LocService _locService;
+        public ProductController(IConfiguration configuration, IStringLocalizer<ProductController> localizer, LocService locService)
         {
             _connectionString = configuration.GetConnectionString("DbConnectionString");
+            _localizer = localizer;
+            _locService = locService;
         }
 
         // GET: api/<ProductController>
         [HttpGet]
         public async Task<IEnumerable<Product>> Get()
         {
+            var culture = CultureInfo.CurrentCulture.Name;
+            string text = _localizer["Test"];
+            string text1 = _locService.GetLocalizedHtmlString("ForgotPassword");
             using (var conn = new SqlConnection(_connectionString))
             {
                 if(conn.State == ConnectionState.Closed)
