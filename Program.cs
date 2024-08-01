@@ -7,26 +7,15 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Reflection;
 using WebAPICoreDapper.Resources;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Logging.AddFile(builder.Configuration.GetSection("Logging"));
 
-var supportedCultures = new[] { 
-    new CultureInfo("vi-VN"),
-    new CultureInfo("en-US") 
-};
-var options = new RequestLocalizationOptions()
-{
-    DefaultRequestCulture = new RequestCulture(culture: "vi-VN", uiCulture: "vi-VN"),
-    SupportedCultures = supportedCultures,
-    SupportedUICultures = supportedCultures
-};
-options.RequestCultureProviders = new[]
-{
-    new RouteDataRequestCultureProvider() {Options = options }
-};
+#region Localization
+builder.Services.AddSingleton<LocService>();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services.AddMvc()
@@ -39,6 +28,27 @@ builder.Services.AddMvc()
             return factory.Create("SharedResource", assemblyName.Name);
         };
     });
+
+var supportedCultures = new[] { 
+    new CultureInfo("vi-VN"),
+    new CultureInfo("en-US") 
+};
+
+var options = new RequestLocalizationOptions()
+{
+        DefaultRequestCulture = new RequestCulture(culture: "vi-VN", uiCulture: "vi-VN"),
+        SupportedCultures = supportedCultures,
+        SupportedUICultures = supportedCultures,
+};
+
+options.RequestCultureProviders = new[]
+{
+    new RouteDataRequestCultureProvider() {Options = options }
+};
+
+builder.Services.AddSingleton(options);
+
+#endregion
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(opt =>
@@ -57,9 +67,6 @@ builder.Services.AddSwaggerGen(c  =>
     });
 });
 
-builder.Services.AddSingleton(options);
-builder.Services.AddSingleton<LocService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -70,7 +77,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 app.UseAuthorization();
 
 app.MapControllers();
