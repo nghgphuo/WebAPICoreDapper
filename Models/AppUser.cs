@@ -22,8 +22,12 @@
 
         public bool TwoFactorEnabled { get; set; }
 
+        public bool LockoutEnabled { set; get; }
+
         public string FullName { get; set; }
 
         public string Adress { get; set; }
+
+        public int AccessFailedCount { get; set; }
     }
 }
