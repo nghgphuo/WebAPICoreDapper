@@ -11,11 +11,19 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity;
+using WebAPICoreDapper.Models;
+using WebAPICoreDapper.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Logging.AddFile(builder.Configuration.GetSection("Logging"));
+
+builder.Services.AddTransient<IUserStore<AppUser>, UserStore>();
+builder.Services.AddTransient<IRoleStore<AppRole>, RoleStore>();
+builder.Services.AddIdentity<AppUser, AppRole>()
+                .AddDefaultTokenProviders();
 
 #region Localization
 builder.Services.AddSingleton<LocService>();
@@ -107,13 +115,16 @@ app.UseExceptionHandler(options =>
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "PHUOCNH REST API V1");
+    });
 }
 
 app.UseHttpsRedirection();
 app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
