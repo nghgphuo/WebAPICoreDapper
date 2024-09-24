@@ -5,9 +5,12 @@ namespace WebAPICoreDapper.Models
     public class Product
     {
         public int Id { get; set; }
-        [Required (ErrorMessage = "SKURequiredErrorMsg")]
-        [StringLength(8, ErrorMessage = "The {0} must be least at {2} characters", MinimumLength = 6)]
+
+        [Required(ErrorMessage = "RequiredErrorMsg")]
+        [StringLength(8, ErrorMessage = "MinAndMaxLengthErrorMsg", MinimumLength = 6)]
         public string Sku { get; set; }
+
+        [Required(ErrorMessage = "RequiredErrorMsg")]
         public float Price { get; set; }
         public float? DiscountPrice { get; set; }
         public bool IsActive { get; set; }  

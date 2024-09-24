@@ -15,4 +15,12 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
+  <ItemGroup>
+	<EmbeddedResource Update="Resources\SharedResource.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+	</EmbeddedResource>
+	<EmbeddedResource Update="Resources\SharedResource.vi.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+	</EmbeddedResource>
+  </ItemGroup>
 </Project>
