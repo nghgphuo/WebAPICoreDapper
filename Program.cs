@@ -1,19 +1,18 @@
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Localization.Routing;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Globalization;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Razor;
-using System.Reflection;
-using WebAPICoreDapper.Resources;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Identity;
-using WebAPICoreDapper.Models;
+using System.Reflection;
 using WebAPICoreDapper.Data;
+using WebAPICoreDapper.Models;
+using WebAPICoreDapper.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,14 +79,52 @@ builder.Services.AddControllers()
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c  =>
+// using Microsoft.OpenApi.Models is already included
+builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Phuocnh Rest API Dapper",
-        Version = "v1"
+        Version = "v1",
+        Title = "TEDU Project",
+        Description = "TEDU API Swagger surface",
+        Contact = new OpenApiContact // Updated to OpenApiContact
+        {
+            Name = "ToanBN",
+            Email = "tedu.international@gmail.com",
+            Url = new Uri("https://www.tedu.com.vn") // Ensure to use Uri type
+        },
+        License = new OpenApiLicense // Updated to OpenApiLicense
+        {
+            Name = "MIT",
+            Url = new Uri("https://github.com/teduinternational/teducoreapp") // Ensure to use Uri type
+        }
+    });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme // Updated to OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please insert JWT with Bearer into field",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
     });
 });
+
 
 var app = builder.Build();
 
