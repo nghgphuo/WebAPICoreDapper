@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 using WebAPICoreDapper.Dtos;
@@ -24,6 +23,7 @@ namespace WebAPICoreDapper.Controllers
         }
 
         [HttpGet]
+        [ClaimRequirement(FunctionCode.SYSTEM_USER, ActionCode.VIEW)] // cai gi day?
         public async Task<IActionResult> Get()
         {
             using (var conn = new SqlConnection(_connectionString))
@@ -73,6 +73,7 @@ namespace WebAPICoreDapper.Controllers
         // POST: api/Role
         [HttpPost]
         [ValidateModel]
+        [ClaimRequirement(FunctionCode.SYSTEM_USER, ActionCode.CREATE)]
         public async Task<IActionResult> Post([FromBody] AppUser user)
         {
             var result = await _userManager.CreateAsync(user);

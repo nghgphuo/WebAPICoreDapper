@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
+using WebAPICoreDapper.Extensions;
 using WebAPICoreDapper.ViewModels;
 namespace WebAPICoreDapper.Controllers
 {
