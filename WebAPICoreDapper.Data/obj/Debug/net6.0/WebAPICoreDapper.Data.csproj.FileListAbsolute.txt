@@ -13,3 +13,4 @@ E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\WebAPICoreDap
 E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\refint\WebAPICoreDapper.Data.dll
 E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\WebAPICoreDapper.Data.pdb
 E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\ref\WebAPICoreDapper.Data.dll
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\WebAPICoreDapper.Data.sourcelink.json

@@ -1,21 +1,23 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Globalization;
 using System.Net;
 using System.Reflection;
+using System.Text;
 using WebAPICoreDapper.Data;
 using WebAPICoreDapper.Data.Models;
-using WebAPICoreDapper.Data.Repositories.Interfaces;
 using WebAPICoreDapper.Data.Repositories;
+using WebAPICoreDapper.Data.Repositories.Interfaces;
 using WebAPICoreDapper.Resources;
-using WebAPICoreDapper.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,17 +51,6 @@ builder.Services.Configure<IdentityOptions>(opt =>
 builder.Services.AddSingleton<LocService>();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-builder.Services.AddMvc()
-    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-    .AddDataAnnotationsLocalization(options =>
-    {
-        options.DataAnnotationLocalizerProvider = (type, factory) =>
-        {
-            var assemblyName = new AssemblyName(typeof(SharedResource).GetTypeInfo().Assembly.FullName);
-            return factory.Create("SharedResource", assemblyName.Name);
-        };
-    });
-
 var supportedCultures = new[] { 
     new CultureInfo("vi-VN"),
     new CultureInfo("en-US") 
@@ -81,11 +72,43 @@ builder.Services.AddSingleton(options);
 
 #endregion
 
+#region Authentication
+//Add authen fixbug cannot get Claims
+builder.Services.AddAuthentication(o =>
+{
+    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = builder.Configuration["Tokens:Issuer"],
+        ValidAudience = builder.Configuration["Tokens:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Tokens:Key"]))
+    };
+});
+#endregion
+
+#region MVC
+builder.Services.AddMvc()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization(options =>
+    {
+        options.DataAnnotationLocalizerProvider = (type, factory) =>
+        {
+            var assemblyName = new AssemblyName(typeof(SharedResource).GetTypeInfo().Assembly.FullName);
+            return factory.Create("SharedResource", assemblyName.Name);
+        };
+    });
+
 builder.Services.AddControllers()
     .AddNewtonsoftJson(opt =>
     {
         opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
     });
+#endregion
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
