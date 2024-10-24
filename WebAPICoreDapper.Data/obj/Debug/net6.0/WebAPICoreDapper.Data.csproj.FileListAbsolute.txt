@@ -1,0 +1,15 @@
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\WebAPICoreDapper.Data.csproj.AssemblyReference.cache
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\WebAPICoreDapper.Data.GeneratedMSBuildEditorConfig.editorconfig
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\WebAPICoreDapper.Data.AssemblyInfoInputs.cache
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\WebAPICoreDapper.Data.AssemblyInfo.cs
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\WebAPICoreDapper.Data.csproj.CoreCompileInputs.cache
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\bin\Debug\net6.0\WebAPICoreDapper.Data.deps.json
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\bin\Debug\net6.0\WebAPICoreDapper.Data.dll
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\bin\Debug\net6.0\WebAPICoreDapper.Data.pdb
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\bin\Debug\net6.0\WebAPICoreDapper.Utilities.dll
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\bin\Debug\net6.0\WebAPICoreDapper.Utilities.pdb
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\WebAPICo.B474B9CC.Up2Date
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\WebAPICoreDapper.Data.dll
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\refint\WebAPICoreDapper.Data.dll
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\WebAPICoreDapper.Data.pdb
+E:\Restful API & Dapper ORM\WebAPICoreDapper.Data\obj\Debug\net6.0\ref\WebAPICoreDapper.Data.dll
