@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WebAPICoreDapper.Utilities")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a65fd6bcca5db21673d84c13d4751897ffda6071")]
 [assembly: System.Reflection.AssemblyProductAttribute("WebAPICoreDapper.Utilities")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WebAPICoreDapper.Utilities")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

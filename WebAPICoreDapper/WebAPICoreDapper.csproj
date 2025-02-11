@@ -4,6 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="..\WebAPICoreDapper.Data\WebAPICoreDapper.Data.csproj" />
   </ItemGroup>
+
+
 
   <ItemGroup>
 	<EmbeddedResource Update="Resources\SharedResource.en.resx">
